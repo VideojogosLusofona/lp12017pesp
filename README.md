@@ -16,15 +16,17 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 ## Descrição do problema
 
 Os alunos devem implementar, em grupos de 1 a 3 elementos, um jogo _roguelike_
-em C# com níveis em grelha [gerados procedimentalmente](#procedural). O jogador
-começa no lado esquerdo da grelha (1ª coluna), e o seu objetivo é encontrar a
-saída do nível, que se encontra do lado direito dessa mesma grelha (última
-coluna). Pelo meio o jogador pode encontrar inimigos, encontrar itens (comida,
-armas, mapas), possivelmente apanhando-os, e cair em armadilhas.
+em C# com níveis em grelha [gerados procedimentalmente](#procedural) e vários
+graus de dificuldade. O jogador começa no lado esquerdo da grelha (1ª coluna),
+e o seu objetivo é encontrar a saída do nível, que se encontra do lado direito
+dessa mesma grelha (última coluna). Pelo meio o jogador pode encontrar
+inimigos, encontrar itens (comida, armas, mapas), possivelmente apanhando-os, e
+cair em armadilhas.
 
-Os níveis vão ficando progressivamente mais difíceis, com mais monstros, mais
-armadilhas e menos itens. O _score_ final do jogador é igual ao nível atingido,
-existindo uma tabela dos top 10 _high scores_, que deve persistir quando o
+Os níveis vão ficando progressivamente mais difíceis, com mais inimigos, mais
+armadilhas e menos itens. O [_score_](#score) final do jogador depende do nível
+atingido, do grau de dificuldade do jogo e do número de inimigos derrotados,
+existindo uma tabela dos _top_ 8 _high scores_, que deve persistir quando o
 programa termina e o PC é desligado.
 
 No início de cada nível, o jogador só tem conhecimento da sua vizinhança (de
@@ -194,6 +196,11 @@ figurar na tabela de _high scores_.
 
 #### Níveis e dificuldade
 
+<!--A dificuldade do jogo e dos níveis é espelhada através do número de inimigos e
+armadilhas (quantos mais, pior) e da quantidade de itens disponíveis (quanto
+menos, pior). A dificuldade é também evidenciada no `HP` e `AttackPower` dos
+inimigos (quanto maiores, pior).-->
+
 À medida que o jogo avança, os níveis vão ficando mais difíceis. Mais
 concretamente, à medida que o jogo avança:
 
@@ -204,9 +211,34 @@ concretamente, à medida que o jogo avança:
 * Devem existir tendencialmente menos itens (comida e armas) disponíveis para o
   jogador apanhar.
 
+Além disto, o jogo em si pode ter diferentes graus de dificuldade, entre 1
+(mais fácil) e 10 (mais difícil). A forma mais simples de relacionar este grau
+de dificuldade com a dificuldade concreta de cada nível consiste em usar uma
+fórmula do seguinte género:
+
+```
+concreteLevelDifficulty = level * gameDifficulty
+```
+
+Por exemplo, o nível 3 num jogo com grau de dificuldade 4 corresponderá a uma
+dificuldade concreta de 12.
+
 Na secção [Geração procedimental e aleatoriedade](#procedural) são apresentadas
-algumas sugestões de como gerar infinitamente níveis de dificuldade cada vez
-maior.
+algumas sugestões de como gerar níveis em função de um valor concreto para a
+dificuldade.
+
+<a name="score"></a>
+
+#### Pontuação (_score_)
+
+O _score_ final do jogador é obtido através da seguinte fórmula:
+
+```
+score = (1 + 0.2 * gameDifficulty) * (level + 0.1 * enemiesKilled)
+```
+
+Existe uma tabela dos top 8 _high scores_, que deve persistir quando o
+programa termina e o PC é desligado.
 
 <a name="procedural"></a>
 
@@ -312,15 +344,17 @@ for (int i = 0; i < numberOfEnemies; i++)
 
 O código anterior assume que as variáveis `maxEnemiesForThisLevel`,
 `maxHPForThisLevel` e `maxAPForThisLevel` já existem. Estas variáveis devem ir
-aumentando de valor à medida que o jogador vai passando os níveis. A forma mais
-simples consiste em usar uma [função][funções] para relacionar a variável
-desejada (*y*) com o nível atual do jogo (*x*). Algumas funções apropriadas
-para o efeito são a [função linear][], a [função linear por troços][], a
-[função logística][] ou a [função logarítmica][]. No site disponibilizado
-através deste [link][funções], é possível manipular os diferentes parâmetros
-das várias funções de modo a visualizar como as mesmas podem relacionar o nível
-atual (*x*) com o valor de saída desejado (*y*). É também [disponibilizada uma
-classe _static_](ProcGenFunctions.cs) com as várias funções sugeridas.
+aumentando de valor à medida que o jogador vai passando os níveis, ou mais
+especificamente, com a dificuldade concreta dos mesmos. A forma mais simples
+consiste em usar uma [função][funções] para relacionar a variável desejada
+(*y*) com a dificuldade concreta do nível atual (*x*). Algumas funções
+apropriadas para o efeito são a [função linear][], a
+[função linear por troços][], a [função logística][] ou a
+[função logarítmica][]. No site disponibilizado através deste [link][funções],
+é possível manipular os diferentes parâmetros das várias funções de modo a
+visualizar como as mesmas podem relacionar a dificuldade concreta do nível
+(*x*) com o valor de saída desejado (*y*). É também [disponibilizada uma classe
+_static_](ProcGenFunctions.cs) com as várias funções sugeridas.
 
 <a name="visualize"></a>
 
@@ -540,7 +574,8 @@ Na fase 1 devem ser implementados os seguintes pontos:
 * Menu principal, com todas as opções a funcionar excepto _High Scores_.
 * Jogo:
   * Grelha do jogo contém jogador e _Exit_, colocados
-    [aleatoriamente](#procedural) na 1ª e 8ª colunas da grelha, respetivamente.
+    [aleatoriamente](#procedural) na 1ª e última colunas da grelha,
+    respetivamente.
   * Jogador inicia jogo com HP igual a 100.
   * Jogador controlável com as teclas WASD, quando chega à _Exit_ termina o
     nível atual, começando um novo nível.
@@ -745,7 +780,7 @@ avaliação do projeto.
 
 ## Entrega
 
-O projeto deve ser entregue via Moodle até às 23h de 20 de junho de 2018.
+O projeto deve ser entregue via Moodle até às 23h de 16 de setembro de 2018.
 Deve ser submetido um ficheiro `zip` com os seguintes conteúdos:
 
 * Solução completa do projeto, contendo adicionalmente e obrigatoriamente:
@@ -834,4 +869,4 @@ Este enunciado é disponibilizados através da licença [CC BY-NC-SA 4.0]. O có
 [função linear por troços]:https://en.wikipedia.org/wiki/Piecewise_linear_function
 [função logarítmica]:https://en.wikipedia.org/wiki/Logarithm#Logarithmic_function
 [função linear]:https://en.wikipedia.org/wiki/Linear_function_(calculus)
-[funções]:https://www.desmos.com/calculator/x5nmemnwsu
+[funções]:https://www.desmos.com/calculator/aavgzb9e5q
