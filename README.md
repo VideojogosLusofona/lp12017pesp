@@ -26,17 +26,41 @@ cair em armadilhas.
 Os níveis vão ficando progressivamente mais difíceis, com mais inimigos, mais
 armadilhas e menos itens. O [_score_](#score) final do jogador depende do nível
 atingido, do grau de dificuldade do jogo e do número de inimigos derrotados.
-Deve existir, para cada dimensão da grelha e nível de dificuldade, uma tabela
-dos _top_ 8 _high scores_, que deve persistir quando o programa termina e o PC
-é desligado.
+Deve existir, para cada dimensão da grelha, uma tabela dos _top_ 8 _high
+scores_, que deve persistir quando o programa termina e o PC é desligado.
 
 No início de cada nível, o jogador só tem conhecimento da sua vizinhança (de
-[Von Neumann][]). À medida que o jogador se desloca, o mapa vai-se revelando. O
-jogador só pode deslocar-se na sua vizinhança de [Von Neumann][] usando as
-teclas WASD (não usar _keypad_, pois o mesmo não existe em alguns portáteis,
-dificultando a avaliação do jogo).
+[Moore][]). À medida que o jogador se desloca, o mapa vai-se revelando. O
+jogador só pode deslocar-se na sua vizinhança de [Moore][] usando as teclas do
+_keypad_.
 
 ### Modo de funcionamento
+
+### Invocação do programa
+
+O programa deve aceitar três opções na linha de comando<sup>[4](#fn4)</sup>:
+
+* `-r` - Número de linhas da grelha de jogo
+* `-c` - Número de colunas da grelha de jogo.
+* `-d` - Grau de dificuldade do jogo.
+
+Um exemplo de execução:
+
+```
+Program.exe -r 10 -c 7 -d 3
+```
+
+As opções de linha de comandos podem também ser definidas diretamente no Visual
+Studio 2017 da seguinte forma: 1) clicar com o botão direito em cima do nome do
+projeto; 2) selecionar "Properties"; 3) selecionar separador "Debug"; e, 4) na
+caixa "Command line arguments" especificar os argumentos desejados.
+
+As opções indicadas são obrigatórias e podem ser dadas em qualquer ordem, desde
+que o valor numérico suceda à opção propriamente dita. Se alguma das opções for
+omitida o programa deve terminar com uma mensagem de erro indicando o modo de
+uso.
+
+### Menu principal
 
 O jogo começa por apresentar o menu principal, que deve conter as seguintes
 opções:
@@ -55,7 +79,7 @@ opção 1, começa um novo jogo.
 
 As ações disponíveis em cada _turn_ são as seguintes:
 
-* `WSAD` para movimento.
+* Teclas do _keypad_ para movimento (`78963214`).
 * `F` para atacar um inimigo no _tile_ atual.
 * `E` para apanhar um item no _tile_ atual (incluindo mapas).
 * `U` para usar um item (arma ou comida).
@@ -63,12 +87,12 @@ As ações disponíveis em cada _turn_ são as seguintes:
     exista uma arma equipada anteriormente, a mesma passa para o inventário.
   * No caso de comida, a mesma é consumida, aumentando o HP na quantidade
     especificada para a comida em questão, até um máximo de 100.
-* `V` para deixar cair um item (arma ou comida) no _tile_ atual.
+* `D` para deixar cair um item (arma ou comida) no _tile_ atual.
 * `I` para mostrar informação acerca dos itens (armas e comida) e armadilhas
   disponíveis no jogo. Esta opção **não** consome uma _turn_.
 * `Q` para terminar o jogo.
 
-As opções `F`, `E`, `U` e `V` devem ser seguidas de um número, indicando qual o
+As opções `F`, `E`, `U` e `D` devem ser seguidas de um número, indicando qual o
 inimigo a atacar ou o item a apanhar/usar/deixar cair. Deve ser permitido
 cancelar a opção antes da indicação do número, sem que o jogador perca uma
 _turn_.
@@ -132,7 +156,7 @@ se encontram após perderem um combate com o jogador.
 
 Existe um mapa por nível, colocado [aleatoriamente](#procedural) num _tile_.
 Caso o jogador apanhe o mapa, todas as partes inexploradas do nível são
-reveladas.
+reveladas. Tal como os itens, o mapa não pode existir no _tile_ `EXIT!`.
 
 #### Combate
 
@@ -143,8 +167,8 @@ valor [aleatório](#procedural) entre 0 e o `AttackPower` do inimigo.
 O jogador pode atacar qualquer inimigo presente no mesmo _tile_ selecionando a
 opção `F` e especificando qual o inimigo a atacar. A quantidade de HP que o
 jogador retira ao inimigo é igual a um valor [aleatório](#procedural) entre 0 e
-o `AttackPower` da arma equipada. O jogador não pode atacar inimigos senão
-tiver uma arma equipada.
+o `AttackPower` da arma equipada. O jogador perde uma _turn_ se tentar atacar
+inimigos sem uma arma equipada.
 
 Quando é realizado um ataque pelo jogador, existe uma
 [probabilidade](#procedural) igual a `1 - Durability` da arma equipada se
@@ -158,9 +182,9 @@ inimigo.
 
 Caso o jogador vença o inimigo (ou seja, caso o HP do inimigo diminua até
 zero), o inimigo desaparece do jogo, deixando para trás zero ou mais itens
-[aleatórios](#procedural), que o jogador pode ou não apanhar. O número e
-qualidade dos itens deixados para trás pelo inimigo **não** varia com a
-dificuldade do nível.
+[aleatórios](#procedural), que o jogador pode ou não apanhar. O número de itens
+deixados para trás pelo inimigo varia com a dificuldade do nível. Ou seja, em
+níveis mais fáceis o inimigo deixa para trás mais itens.
 
 Se o inimigo vencer o jogador (ou seja, caso o HP do jogador chegue a zero), o
 jogo termina.
@@ -191,16 +215,12 @@ O jogo pode terminar de duas formas:
    1 HP por _turn_), devido a combate ou devido a armadilhas.
 2. Quando o jogador seleciona a opção `Q`.
 
-Em qualquer dos casos, verifica-se se o nível atingido está entre os 10
+Em qualquer dos casos, verifica-se se o _score_ alcançado está entre os 8
 melhores, e em caso afirmativo, solicita-se ao jogador o seu nome para o mesmo
-figurar na tabela de _high scores_.
+figurar na tabela de _high scores_ para a dimensão da grelha e nível de
+dificuldade em questão.
 
 #### Níveis e dificuldade
-
-<!--A dificuldade do jogo e dos níveis é espelhada através do número de inimigos e
-armadilhas (quantos mais, pior) e da quantidade de itens disponíveis (quanto
-menos, pior). A dificuldade é também evidenciada no `HP` e `AttackPower` dos
-inimigos (quanto maiores, pior).-->
 
 À medida que o jogo avança, os níveis vão ficando mais difíceis. Mais
 concretamente, à medida que o jogo avança:
@@ -211,6 +231,8 @@ concretamente, à medida que o jogo avança:
 * Devem existir tendencialmente mais armadilhas.
 * Devem existir tendencialmente menos itens (comida e armas) disponíveis para o
   jogador apanhar.
+* Os inimigos deixam para trás tendencialmente menos itens quando são
+  derrotados.
 
 Além disto, o jogo em si pode ter diferentes graus de dificuldade, entre 1
 (mais fácil) e 10 (mais difícil). A forma mais simples de relacionar este grau
@@ -226,7 +248,7 @@ dificuldade concreta de 12.
 
 Na secção [Geração procedimental e aleatoriedade](#procedural) são apresentadas
 algumas sugestões de como gerar níveis em função de um valor concreto para a
-dificuldade.
+sua dificuldade.
 
 <a name="score"></a>
 
@@ -235,14 +257,13 @@ dificuldade.
 O _score_ final do jogador é obtido através da seguinte fórmula:
 
 ```
-score = (1 + 0.2 * gameDifficulty) * (level + 0.1 * enemiesKilled)
+score = (1 + 0.4 * gameDifficulty) * (level + 0.1 * enemiesKilled)
 ```
 
-Deve existir, para cada dimensão da grelha e grau de dificuldade, uma tabela
-dos _top_ 8 _high scores_, que deve persistir quando o programa termina e o PC
-é desligado. Por exemplo, para as dimensões 10x6 e grau de dificuldade 5, os
-respetivos _high scores_ podem ser guardados num ficheiro chamado
-`scores_10x6_5.txt`.
+Deve existir, para cada dimensão da grelha, uma tabela dos _top_ 8 _high
+scores_, que deve persistir quando o programa termina e o PC é desligado. Por
+exemplo, para a dimensão 10x6, os respetivos _high scores_ podem ser guardados
+num ficheiro chamado `scores_10x6.txt`.
 
 <a name="procedural"></a>
 
@@ -379,7 +400,7 @@ O ecrã principal do jogo deve mostrar o seguinte:
 * Uma ou mais mensagens descrevendo o resultado das ações realizadas na _turn_
   anterior por parte dos jogadores e dos inimigos no _tile_ atual.
 * Descrição do que está no _tile_ atual, bem como nos _tiles_ na respetiva
-  vizinhança de [Von Neumann].
+  vizinhança de [Moore][].
 * Indicação das ações realizáveis.
 
 Uma vez que o C# suporta nativamente a representação [Unicode], os respetivos
@@ -425,9 +446,7 @@ Messages
 
 What do I see?
 --------------
-* NORTH : Empty
 * EAST  : Exit
-* WEST  : Empty
 * SOUTH : Trap (Hell Pit), Map
 * HERE  : Enemy (HP=14.2, AP= 8.5), Weapon (Shiny Sword)
 
@@ -472,7 +491,7 @@ A opção `E` pode ser utilizada quando existem itens no mesmo _tile_ do jogador
 Deve ser mostrada uma mensagem de erro quando a opção `E` é selecionada e não
 existem itens no _tile_ onde o jogador se encontra.
 
-As opções `U` e `V` podem ser utilizadas quando existem itens no inventário do
+As opções `U` e `D` podem ser utilizadas quando existem itens no inventário do
 jogador. Deve ser mostrada uma mensagem de erro quando uma destas opções é
 selecionada e não existem itens no inventário do jogador.
 
@@ -863,7 +882,7 @@ Este enunciado é disponibilizados através da licença [CC BY-NC-SA 4.0]. O có
 [SRP]:https://en.wikipedia.org/wiki/Single_responsibility_principle
 [KISS]:https://en.wikipedia.org/wiki/KISS_principle
 [GP]:https://en.wikipedia.org/wiki/Procedural_generation
-[Von Neumann]:https://en.wikipedia.org/wiki/Von_Neumann_neighborhood
+[Moore]:https://en.wikipedia.org/wiki/Moore_neighborhood
 [UTF-8]:https://en.wikipedia.org/wiki/UTF-8
 [Unicode]:https://en.wikipedia.org/wiki/Unicode
 [Random]:https://docs.microsoft.com/pt-pt/dotnet/api/system.random
