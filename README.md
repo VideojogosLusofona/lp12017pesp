@@ -25,9 +25,10 @@ cair em armadilhas.
 
 Os níveis vão ficando progressivamente mais difíceis, com mais inimigos, mais
 armadilhas e menos itens. O [_score_](#score) final do jogador depende do nível
-atingido, do grau de dificuldade do jogo e do número de inimigos derrotados,
-existindo uma tabela dos _top_ 8 _high scores_, que deve persistir quando o
-programa termina e o PC é desligado.
+atingido, do grau de dificuldade do jogo e do número de inimigos derrotados.
+Deve existir, para cada dimensão da grelha e nível de dificuldade, uma tabela
+dos _top_ 8 _high scores_, que deve persistir quando o programa termina e o PC
+é desligado.
 
 No início de cada nível, o jogador só tem conhecimento da sua vizinhança (de
 [Von Neumann][]). À medida que o jogador se desloca, o mapa vai-se revelando. O
@@ -237,8 +238,11 @@ O _score_ final do jogador é obtido através da seguinte fórmula:
 score = (1 + 0.2 * gameDifficulty) * (level + 0.1 * enemiesKilled)
 ```
 
-Existe uma tabela dos top 8 _high scores_, que deve persistir quando o
-programa termina e o PC é desligado.
+Deve existir, para cada dimensão da grelha e grau de dificuldade, uma tabela
+dos _top_ 8 _high scores_, que deve persistir quando o programa termina e o PC
+é desligado. Por exemplo, para as dimensões 10x6 e grau de dificuldade 5, os
+respetivos _high scores_ podem ser guardados num ficheiro chamado
+`scores_10x6_5.txt`.
 
 <a name="procedural"></a>
 
