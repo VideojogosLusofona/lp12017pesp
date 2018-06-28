@@ -643,7 +643,7 @@ Na fase 1 devem ser implementados os seguintes pontos:
   * Jogador morre quando HP chega a zero.
 
 A implementação completa desta fase equivale a 50% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 2.5).
+[objetivo **O1**](#objetivos) (nota máxima 5).
 
 #### Fase 2
 
@@ -654,7 +654,7 @@ indicados nas fases anteriores):
   inexploradas devem ser claramente distinguíveis das partes exploradas.
 
 A implementação completa desta fase equivale a 60% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 3).
+[objetivo **O1**](#objetivos) (nota máxima 6).
 
 #### Fase 3
 
@@ -666,7 +666,7 @@ indicados nas fases anteriores):
   não são guardados no inventário, desaparecendo do nível quando apanhados.
 
 A implementação completa desta fase equivale a 65% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 3.25).
+[objetivo **O1**](#objetivos) (nota máxima 6.5).
 
 #### Fase 4
 
@@ -680,7 +680,7 @@ indicados nas fases anteriores):
   diferentes tipos de armadilha no jogo.
 
 A implementação completa desta fase equivale a 70% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 3.5).
+[objetivo **O1**](#objetivos) (nota máxima 7).
 
 #### Fase 5
 
@@ -693,7 +693,7 @@ indicados nas fases anteriores):
   * Quando jogador morre o _score_ é guardado caso esteja entre os 8 melhores.
 
 A implementação completa desta fase equivale a 75% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 3.75).
+[objetivo **O1**](#objetivos) (nota máxima 7.5).
 
 #### Fase 6
 
@@ -709,7 +709,7 @@ indicados nas fases anteriores):
   dos diferentes itens existentes no jogo.
 
 A implementação completa desta fase equivale a 80% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 4).
+[objetivo **O1**](#objetivos) (nota máxima 8).
 
 #### Fase 7
 
@@ -725,7 +725,7 @@ indicados nas fases anteriores):
     anteriormente equipada é movida para o inventário.
 
 A implementação completa desta fase equivale a 85% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 4.25).
+[objetivo **O1**](#objetivos) (nota máxima 8.5).
 
 #### Fase 8
 
@@ -737,7 +737,7 @@ indicados nas fases anteriores):
   e não podem ser atacados.
 
 A implementação completa desta fase equivale a 90% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 4.5).
+[objetivo **O1**](#objetivos) (nota máxima 9).
 
 #### Fase 9
 
@@ -748,7 +748,7 @@ indicados nas fases anteriores):
   onde os mesmos se encontrem.
 
 A implementação completa desta fase equivale a 95% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 4.75).
+[objetivo **O1**](#objetivos) (nota máxima 9.5).
 
 #### Fase 10
 
@@ -758,7 +758,7 @@ indicados nas fases anteriores):
 * Combate ativo: implementação da opção `(F) Attack Enemy`.
 
 A implementação completa desta fase equivale a 100% de cumprimento do
-[objetivo **O1**](#objetivos) (nota máxima 5).
+[objetivo **O1**](#objetivos) (nota máxima 10).
 
 <a name="faseextra"></a>
 
@@ -767,12 +767,12 @@ A implementação completa desta fase equivale a 100% de cumprimento do
 Na fase extra devem ser implementados os seguintes pontos (além dos pontos
 indicados nas fases anteriores):
 
-* Implementação de _save games_, com opção extra no menu principal de _load
-  game_.
+* Implementação de _save games_, com opção extra na linha de comandos para
+  _load game_.
 
 A implementação completa desta fase permite compensar eventuais problemas
 noutras partes do código e/ou do projeto, facilitando a obtenção da nota
-máxima de 5 valores.
+máxima de 10 valores.
 
 <a name="objetivos"></a>
 
@@ -827,7 +827,7 @@ Este projeto tem os seguintes objetivos:
     suficiente para que seja possível ter uma boa ideia do que foi feito.
     Atenção aos erros ortográficos, pois serão tidos em conta na nota final.
 
-O projeto tem um peso de 5 valores na nota final da disciplina e será avaliado
+O projeto tem um peso de 10 valores na nota final da disciplina e será avaliado
 de forma qualitativa. Isto significa que todos os objetivos têm de ser
 parcialmente ou totalmente cumpridos. Ou seja, se os alunos ignorarem
 completamente um dos objetivos, a nota final será zero.
@@ -838,6 +838,9 @@ verificada através dos _commits_) e na discussão do projeto. Se o aluno tiver
 realizado uma percentagem equitativa do projeto e se souber explicar o que fez
 durante a discussão, então a nota individual deverá ser muito semelhante à
 avaliação do projeto.
+
+A nota mínima neste projeto para aprovação na componente prática de LP1 é de
+4.5 valores.
 
 ## Entrega
 
