@@ -29,16 +29,16 @@ atingido, do grau de dificuldade do jogo e do número de inimigos derrotados.
 Deve existir, para cada dimensão da grelha, uma tabela dos _top_ 8 _high
 scores_, que deve persistir quando o programa termina e o PC é desligado.
 
-No início de cada nível, o jogador só tem conhecimento da sua vizinhança (de
-[Moore][]). À medida que o jogador se desloca, o mapa vai-se revelando. O
-jogador só pode deslocar-se na sua vizinhança de [Moore][] usando as teclas do
+No início de cada nível o jogador só tem conhecimento da sua vizinhança de
+[Moore][]. À medida que o jogador se desloca, o mapa vai-se revelando. O
+jogador pode deslocar-se na sua vizinhança de [Moore][] usando as teclas do
 _keypad_.
 
 ### Modo de funcionamento
 
 ### Invocação do programa
 
-O programa deve aceitar três opções na linha de comando<sup>[4](#fn4)</sup>:
+O programa deve aceitar três opções na linha de comando<sup>[1](#fn1)</sup>:
 
 * `-r` - Número de linhas da grelha de jogo
 * `-c` - Número de colunas da grelha de jogo.
@@ -903,6 +903,12 @@ reprovação de ano ou mesmo suspensão temporária ou definitiva da ULHT.
 
 _Texto adaptado da disciplina de [Algoritmos e
 Estruturas de Dados][aed] do [Instituto Superior Técnico][ist]_
+
+## Notas
+
+<sup><a name="fn1">1</a></sup> Os argumentos da linha de comandos estão
+disponíveis num _array_ de _strings_ chamado `args` no método `Main()`, como
+explicado nas páginas 285 e 286 do livro da disciplina.
 
 ## Referências
 
