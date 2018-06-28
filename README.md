@@ -417,6 +417,10 @@ o efeito deve ser incluída a instrução `Console.OutputEncoding = Encoding.UTF
 no método `Main()` (é necessário usar o _namespace_ `System.Text`).
 
 A [Figura 1](#fig1) mostra uma possível implementação da visualização do jogo.
+A representação em [Unicode] do mundo de jogo impõe um limite prático no que é
+possível ver na grelha. No entanto tal não significa que o número de inimigos
+e itens num _tile_ deva ser limitado, pois todos os conteúdos totais de um
+_tile_ podem ser conferidos através da opção `(L) Look around`.
 
 <a name="fig1"></a>
 
@@ -632,15 +636,19 @@ implementação e não "saltar" fases.
 Na fase 1 devem ser implementados os seguintes pontos:
 
 * Menu principal, com todas as opções a funcionar excepto _High Scores_.
+* Opções de linha de comando a funcionar: `-r` e `-c`.
 * Jogo:
-  * Grelha do jogo contém jogador e _Exit_, colocados
-    [aleatoriamente](#procedural) na 1ª e última colunas da grelha,
-    respetivamente.
+  * Grelha do jogo, com dimensão especificada nas opções de linha de comandos,
+    contém jogador e _Exit_, colocados [aleatoriamente](#procedural) na 1ª e
+    última colunas da grelha, respetivamente.
   * Jogador inicia jogo com HP igual a 100.
   * Jogador controlável com o _keypad_, quando chega à _Exit_ termina o nível
     atual, começando um novo nível.
   * Jogador perde 1 HP por cada _turn_.
   * Jogador morre quando HP chega a zero.
+  * Implementação da opção `(L) Look around`, que neste caso mostra apenas
+    informação sobre a saída quando a mesma está na vizinhança de [Moore][] do
+    jogador.
 
 A implementação completa desta fase equivale a 50% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 5).
@@ -661,9 +669,10 @@ A implementação completa desta fase equivale a 60% de cumprimento do
 Na fase 3 devem ser implementados os seguintes pontos (além dos pontos
 indicados nas fases anteriores):
 
-* Implementação dos mapas e da funcionalidade `(E) Pick up item` apenas para
-  mapas. Quando apanhados, os mapas revelam o nível na sua totalidade. Os mapas
-  não são guardados no inventário, desaparecendo do nível quando apanhados.
+* Implementação do mapa e da funcionalidade `(E) Pick up item` apenas para o
+  mapa. Quando apanhado, o mapa revela o nível na sua totalidade. O mapa não é
+  guardado no inventário, desaparecendo do nível quando apanhado.
+* Atualização da opção `(L) Look around` para indicar a presença do mapa.
 
 A implementação completa desta fase equivale a 65% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 6.5).
@@ -676,8 +685,9 @@ indicados nas fases anteriores):
 * Implementação de armadilhas: quando o jogador se move pela primeira vez para
   um _tile_ que contém uma armadilha, perde HP entre 0 e o valor de `MaxDamage`
   da armadilha em questão.
-* Implementação da opção `(I) Information`, que apresenta informação acerca dos
+* Implementação da opção `(H) Help`, que apresenta informação acerca dos
   diferentes tipos de armadilha no jogo.
+* Atualização da opção `(L) Look around` para descrição de armadilhas.
 
 A implementação completa desta fase equivale a 70% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 7).
@@ -689,7 +699,7 @@ indicados nas fases anteriores):
 
 * Implementação dos _high scores_ usando ficheiros:
   * Opção _High Scores_ do menu principal permite visualizar os 8 melhores
-    _scores_.
+    _scores_ para a dimensão da grelha especificada na linha de comandos.
   * Quando jogador morre o _score_ é guardado caso esteja entre os 8 melhores.
 
 A implementação completa desta fase equivale a 75% de cumprimento do
@@ -702,11 +712,12 @@ indicados nas fases anteriores):
 
 * Jogador tem inventário que permite guardar itens até um peso máximo
   pré-determinado.
-* Implementação das funcionalidades `(E) Pick up item` e `(V) Drop item` para
+* Implementação das funcionalidades `(E) Pick up item` e `(D) Drop item` para
   comida e armas. Quando este tipo de itens (comida e armas) são apanhados, são
   guardados no inventário do jogador, caso o mesmo ainda suporte o peso.
-* Atualização da opção `(I) Information` de modo a mostrar informação acerca
+* Atualização da opção `(H) Help` de modo a mostrar informação acerca
   dos diferentes itens existentes no jogo.
+* Atualização da opção `(L) Look around` para descrição de comida e armas.
 
 A implementação completa desta fase equivale a 80% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 8).
@@ -735,6 +746,7 @@ indicados nas fases anteriores):
 * Implementação de inimigos com as características pedidas. Os inimigos existem
   no jogo e aparecem na visualização, mas não interferem, não atacam o jogador
   e não podem ser atacados.
+* Atualização da opção `(L) Look around` para descrição dos inimigos.
 
 A implementação completa desta fase equivale a 90% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 9).
@@ -785,13 +797,13 @@ Este projeto tem os seguintes objetivos:
 * **O2** - Projeto e código bem organizados, nomeadamente: a) estrutura de
   classes bem pensada (ver secção [Organização do projeto e estrutura de
   classes](#orgclasses)); b) código devidamente comentado e indentado; c)
-  inexistência de código "morto", que não faz nada, como por exemplo
+  inexistência de código "morto", que não faz nada, como por exemplo classes,
   variáveis ou métodos nunca usados; d) soluções [simples][KISS] e eficientes;
-  e, e) projeto compila e executa sem erros e/ou  _warnings_.
+  e, e) projeto compila e executa sem erros e/ou _warnings_.
 * **O3** - Projeto adequadamente comentado e documentado. Documentação deve ser
   feita com comentários de documentação XML, e a documentação (gerada com
   [Doxygen], [Sandcastle] ou ferramenta similar) deve estar incluída no ZIP do
-  projeto (mas não integrada no repositório Git).
+  projeto (**mas não integrada no repositório Git**).
 * **O4** - Repositório Git deve refletir boa utilização do mesmo, com _commits_
   de todos os elementos do grupo e mensagens de _commit_ que sigam as melhores
   práticas para o efeito (como indicado
@@ -855,7 +867,7 @@ Deve ser submetido um ficheiro `zip` com os seguintes conteúdos:
 
 Notas adicionais para entrega:
 
-* Os grupos podem ter entre 2 a 3 elementos.
+* Os grupos podem ter entre 1 a 3 elementos.
 * A solução deve ser entregue na forma de uma solução para Visual Studio 2017.
 * O projeto deve ser do tipo Console App (.NET Framework ou .NET Core).
 * Todos os ficheiros do projeto devem ser gravados em codificação [UTF-8]. Este
@@ -901,7 +913,8 @@ from https://en.wikipedia.org/wiki/Procedural_generation.
 
 ## Licenças
 
-Este enunciado é disponibilizados através da licença [CC BY-NC-SA 4.0]. O código associado é disponibilizado através da licença
+Este enunciado é disponibilizados através da licença [CC BY-NC-SA 4.0]. O
+código associado é disponibilizado através da licença
 [MIT](http://opensource.org/licenses/MIT).
 
 ## Metadados
