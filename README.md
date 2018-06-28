@@ -50,15 +50,23 @@ Um exemplo de execução:
 Program.exe -r 10 -c 7 -d 3
 ```
 
-As opções de linha de comandos podem também ser definidas diretamente no Visual
-Studio 2017 da seguinte forma: 1) clicar com o botão direito em cima do nome do
-projeto; 2) selecionar "Properties"; 3) selecionar separador "Debug"; e, 4) na
-caixa "Command line arguments" especificar os argumentos desejados.
-
 As opções indicadas são obrigatórias e podem ser dadas em qualquer ordem, desde
 que o valor numérico suceda à opção propriamente dita. Se alguma das opções for
 omitida o programa deve terminar com uma mensagem de erro indicando o modo de
 uso.
+
+Se os alunos implementarem a [Fase Extra](#faseextra), nomeadamente a opção de
+_Save Game_, o programa pode também aceitar a opção `-l` (que tem de ser dada
+exclusivamente) para carregar um jogo guardado anteriormente. Por exemplo:
+
+```
+Program.exe -l mysavegame.sav
+```
+
+As opções de linha de comandos podem também ser definidas diretamente no Visual
+Studio 2017 da seguinte forma: 1) clicar com o botão direito em cima do nome do
+projeto; 2) selecionar "Properties"; 3) selecionar separador "Debug"; e, 4) na
+caixa "Command line arguments" especificar os argumentos desejados.
 
 ### Menu principal
 
@@ -79,7 +87,7 @@ opção 1, começa um novo jogo.
 
 As ações disponíveis em cada _turn_ são as seguintes:
 
-* Teclas do _keypad_ para movimento (`78963214`).
+* Teclas do _keypad_ para movimento possível em oito direções
 * `F` para atacar um inimigo no _tile_ atual.
 * `E` para apanhar um item no _tile_ atual (incluindo mapas).
 * `U` para usar um item (arma ou comida).
@@ -88,8 +96,11 @@ As ações disponíveis em cada _turn_ são as seguintes:
   * No caso de comida, a mesma é consumida, aumentando o HP na quantidade
     especificada para a comida em questão, até um máximo de 100.
 * `D` para deixar cair um item (arma ou comida) no _tile_ atual.
-* `I` para mostrar informação acerca dos itens (armas e comida) e armadilhas
+* `L` para mostrar descrição dos itens na vizinhança de [Moore][] do jogador.
+* `H` para mostrar informação acerca dos itens (armas e comida) e armadilhas
   disponíveis no jogo. Esta opção **não** consome uma _turn_.
+* `S` para guardar o jogo (funcionalidade opcional, tal como descrito na
+  [Fase Extra](#faseextra)).
 * `Q` para terminar o jogo.
 
 As opções `F`, `E`, `U` e `D` devem ser seguidas de um número, indicando qual o
@@ -215,10 +226,9 @@ O jogo pode terminar de duas formas:
    1 HP por _turn_), devido a combate ou devido a armadilhas.
 2. Quando o jogador seleciona a opção `Q`.
 
-Em qualquer dos casos, verifica-se se o _score_ alcançado está entre os 8
-melhores, e em caso afirmativo, solicita-se ao jogador o seu nome para o mesmo
-figurar na tabela de _high scores_ para a dimensão da grelha e nível de
-dificuldade em questão.
+No primeiro caso verifica-se se o _score_ alcançado está entre os 8 melhores, e
+em caso afirmativo, solicita-se ao jogador o seu nome para o mesmo figurar na
+tabela de _high scores_ para a dimensão da grelha em questão.
 
 #### Níveis e dificuldade
 
@@ -234,7 +244,7 @@ concretamente, à medida que o jogo avança:
 * Os inimigos deixam para trás tendencialmente menos itens quando são
   derrotados.
 
-Além disto, o jogo em si pode ter diferentes graus de dificuldade, entre 1
+Adicionalmente, o jogo em si pode ter diferentes graus de dificuldade, entre 1
 (mais fácil) e 10 (mais difícil). A forma mais simples de relacionar este grau
 de dificuldade com a dificuldade concreta de cada nível consiste em usar uma
 fórmula do seguinte género:
@@ -399,9 +409,7 @@ O ecrã principal do jogo deve mostrar o seguinte:
 * Uma legenda, explicando o que é cada elemento no mapa.
 * Uma ou mais mensagens descrevendo o resultado das ações realizadas na _turn_
   anterior por parte dos jogadores e dos inimigos no _tile_ atual.
-* Descrição do que está no _tile_ atual, bem como nos _tiles_ na respetiva
-  vizinhança de [Moore][].
-* Indicação das ações realizáveis.
+* Indicação das opções disponíveis.
 
 Uma vez que o C# suporta nativamente a representação [Unicode], os respetivos
 caracteres podem e devem ser usados para melhorar a visualização do jogo. Para
@@ -413,16 +421,16 @@ A [Figura 1](#fig1) mostra uma possível implementação da visualização do jo
 <a name="fig1"></a>
 
 ```
-+++++++++++++++++++++++++++ LP1 Rogue : Level 009 +++++++++++++++++++++++++++
++++++++++++ LP1 Rogue : Level 009 : Difficulty 04 : Size 08x08 ++++++++++++++++
 
 ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~    Player stats
 ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~    ------------
                                                    HP        - 34.4
-☿.... ☢.... ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~    Weapon    - Rusty Sword
-..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~    Inventory - 91.7% full
+☿.... ☢.... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~    Weapon    - Rusty Sword
+..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~    Inventory - 91.7% full
 
-..... ..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~
-..... ..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~
+..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~
+..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~
 
 ..... ..... ..... ?.... ..... †☿... ☿☿☿☢. ~~~~~    Legend
 ..... ..... ..... ..... ..... ..... ..... ~~~~~    ------
@@ -430,11 +438,11 @@ A [Figura 1](#fig1) mostra uma possível implementação da visualização do jo
 ~~~~~ ☿.... ..... ..... ✚☿... ..... ..... .....   EXIT! - Exit
 ~~~~~ ..... ..... ..... ..... ..... ..... .....       . - Empty
                                                       ~ - Unexplored
-~~~~~ ~~~~~ ☢☿✚.. ..... ..... ..... ⨀☿†.. EXIT!       ⍠ - Map
-~~~~~ ~~~~~ ..... ..... ..... ..... ..... EXIT!       ☿ - Enemy
+~~~~~ ..... ☢☿✚.. ..... ..... ..... ⨀☿†.. EXIT!       ⍠ - Map
+~~~~~ ..... ..... ..... ..... ..... ..... EXIT!       ☿ - Enemy
                                                       ✚ - Food
-~~~~~ ~~~~~ ~~~~~ ~~~~~ ✚☢... ..... ☢⍠... ~~~~~       † - Weapon
-~~~~~ ~~~~~ ~~~~~ ~~~~~ ..... ..... ..... ~~~~~       ☢ - Trap
+~~~~~ ~~~~~ ~~~~~ ~~~~~ ✚☢... ..... ☢⍠... ✚....       † - Weapon
+~~~~~ ~~~~~ ~~~~~ ~~~~~ ..... ..... ..... .....       ☢ - Trap
 
 ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~
 ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~ ~~~~~
@@ -444,22 +452,17 @@ Messages
 * You moved WEST
 * You were attacked by an enemy and lost 5.3 HP
 
-What do I see?
---------------
-* EAST  : Exit
-* SOUTH : Trap (Hell Pit), Map
-* HERE  : Enemy (HP=14.2, AP= 8.5), Weapon (Shiny Sword)
-
 Options
 -------
-(W) Move NORTH   (A) Move WEST    (S) Move SOUTH (D) Move EAST
-(F) Attack Enemy (E) Pick up item (U) Use item   (V) Drop item
-(I) Information  (Q) Quit game
+↖↑↗        (F) Attack Enemy (E) Pick up item   (U) Use item   (D) Drop item
+← → Move   (L) Look around  (H) Help  
+↙↓↘        (S) Save game    (Q) Quit game
 
 >
 ```
 
-**Figura 1** - Possível implementação da visualização do jogo (ecrã principal).
+**Figura 1** - Possível implementação da visualização do jogo para um grelha de
+8x8 (ecrã principal).
 
 #### Ecrã de ataque (opção F)
 
@@ -485,7 +488,7 @@ Select enemy to attack
 
 **Figura 2** - Possível menu para seleção de inimigo a atacar.
 
-#### Ecrã de apanhar/usar/deixar cair item (opções E, U e V)
+#### Ecrã de apanhar/usar/deixar cair item (opções E, U e D)
 
 A opção `E` pode ser utilizada quando existem itens no mesmo _tile_ do jogador.
 Deve ser mostrada uma mensagem de erro quando a opção `E` é selecionada e não
@@ -514,16 +517,41 @@ Select item to XXXX
 **Figura 3** - Possível menu para seleção de item. `XXXX` deve ser substituído
 por `pick up`, `use` ou `drop`, dependendo da opção escolhida.
 
-#### Ecrã de informação (opção I)
+#### Ecrã de olhar em redor (opção L)
 
-Este ecrã aparece quando é selecionada a opção `I`, mostrando informação sobre
-os diferentes itens e armadilhas existentes no jogo. O jogador deve pressionar
-ENTER ou qualquer tecla para voltar ao ecrã principal, que deve ser redesenhado.
-O uso desta opção **não** gasta uma _turn_. A [Figura 4](#fig4) mostra um
-possível ecrã de informação (os itens e armadilhas apresentadas são meramente
-exemplificativos).
+Neste ecrã deve ser apresentada uma descrição do que está no _tile_ atual, bem
+como nos _tiles_ na respetiva vizinhança de [Moore][]. O jogador deve
+pressionar ENTER ou qualquer tecla para voltar ao ecrã principal, que deve ser
+redesenhado. O uso desta opção **não** gasta uma _turn_. A [Figura 4](#fig4)
+mostra um possível ecrã de _look around_.
 
 <a name="fig4"></a>
+
+```
+* HERE : Enemy (HP=14.2, AP= 8.5), Weapon (Shiny Sword)
+* ← W  : Empty
+* ↖ NW : Empty
+* ↑ N  : Empty
+* ↗ NE : Empty
+* → E  : Exit
+* ↘ SE : Food (Water)
+* ↓ S  : Trap (Hell Pit), Map
+* ↙ SW : Empty
+```
+
+**Figura 4** - Possível ecrã de _look around_, mostrando a descrição dos itens
+que estão no _tile_ atual e na vizinhança de [Moore][] do jogador.
+
+#### Ecrã de ajuda (opção H)
+
+Este ecrã aparece quando é selecionada a opção `H`, mostrando informação sobre
+os diferentes itens e armadilhas existentes no jogo. O jogador deve pressionar
+ENTER ou qualquer tecla para voltar ao ecrã principal, que deve ser redesenhado.
+O uso desta opção **não** gasta uma _turn_. A [Figura 5](#fig5) mostra um
+possível ecrã de ajuda (os itens e armadilhas apresentadas são meramente
+exemplificativos).
+
+<a name="fig5"></a>
 
 ```
 Food             HPIncrease      Weight
@@ -553,8 +581,17 @@ Bear Trap                -8
 Bottomless Chasm        -30
 ```
 
-**Figura 4** - Possível ecrã de informação (os itens e armadilhas apresentadas
+**Figura 5** - Possível ecrã de ajuda (os itens e armadilhas apresentadas
 são meramente exemplificativos).
+
+#### Ecrã de guardar o jogo (opção S)
+
+Quando a opção `S` é solicitado ao utilizador o nome de ficheiro onde guardar
+o jogo. Caso o jogador insira uma _string_ vazia, o jogo não é guardado. Após
+ser guardado (ou não), o jogo continua no estado em que estava antes.
+
+Esta funcionalidade faz parte da [Fase Extra](#faseextra), sendo por isso
+opcional.
 
 #### Ecrã de terminação do jogo (opção Q)
 
@@ -600,8 +637,8 @@ Na fase 1 devem ser implementados os seguintes pontos:
     [aleatoriamente](#procedural) na 1ª e última colunas da grelha,
     respetivamente.
   * Jogador inicia jogo com HP igual a 100.
-  * Jogador controlável com as teclas WASD, quando chega à _Exit_ termina o
-    nível atual, começando um novo nível.
+  * Jogador controlável com o _keypad_, quando chega à _Exit_ termina o nível
+    atual, começando um novo nível.
   * Jogador perde 1 HP por cada _turn_.
   * Jogador morre quando HP chega a zero.
 
@@ -651,10 +688,9 @@ Na fase 5 devem ser implementados os seguintes pontos (além dos pontos
 indicados nas fases anteriores):
 
 * Implementação dos _high scores_ usando ficheiros:
-  * Opção _High Scores_ do menu principal permite visualizar os 10 melhores
+  * Opção _High Scores_ do menu principal permite visualizar os 8 melhores
     _scores_.
-  * Quando jogador morre ou seleciona a opção `Q`, _score_ é guardado caso
-    esteja entre os 10 melhores.
+  * Quando jogador morre o _score_ é guardado caso esteja entre os 8 melhores.
 
 A implementação completa desta fase equivale a 75% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 3.75).
@@ -723,6 +759,8 @@ indicados nas fases anteriores):
 
 A implementação completa desta fase equivale a 100% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 5).
+
+<a name="faseextra"></a>
 
 #### Fase extra
 
