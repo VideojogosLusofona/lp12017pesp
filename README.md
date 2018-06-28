@@ -56,8 +56,9 @@ omitida o programa deve terminar com uma mensagem de erro indicando o modo de
 uso.
 
 Se os alunos implementarem a [Fase Extra](#faseextra), nomeadamente a opção de
-_Save Game_, o programa pode também aceitar a opção `-l` (que tem de ser dada
-exclusivamente) para carregar um jogo guardado anteriormente. Por exemplo:
+_Save Game_, o programa pode também aceitar a opção `-l` para fazer _load_ de
+um jogo guardado anteriormente. Esta opção tem de ser usada exclusivamente. Por
+exemplo:
 
 ```
 Program.exe -l mysavegame.sav
@@ -96,7 +97,9 @@ As ações disponíveis em cada _turn_ são as seguintes:
   * No caso de comida, a mesma é consumida, aumentando o HP na quantidade
     especificada para a comida em questão, até um máximo de 100.
 * `D` para deixar cair um item (arma ou comida) no _tile_ atual.
-* `L` para mostrar descrição dos itens na vizinhança de [Moore][] do jogador.
+* `L` para mostrar descrição dos itens na vizinhança de [Moore][] do jogador
+  (incluindo local onde o jogador se encontra). Esta opção **não** consome uma
+  _turn_.
 * `H` para mostrar informação acerca dos itens (armas e comida) e armadilhas
   disponíveis no jogo. Esta opção **não** consome uma _turn_.
 * `S` para guardar o jogo (funcionalidade opcional, tal como descrito na
@@ -105,11 +108,10 @@ As ações disponíveis em cada _turn_ são as seguintes:
 
 As opções `F`, `E`, `U` e `D` devem ser seguidas de um número, indicando qual o
 inimigo a atacar ou o item a apanhar/usar/deixar cair. Deve ser permitido
-cancelar a opção antes da indicação do número, sem que o jogador perca uma
+cancelar a opção antes da indicação do número, sem que o jogador gaste uma
 _turn_.
 
-Em cada _turn_ é consumido automaticamente 1 HP do jogador, independentemente
-da ação realizada.
+Em cada _turn_ é consumido automaticamente 1 HP do jogador.
 
 #### O jogador
 
@@ -178,7 +180,7 @@ valor [aleatório](#procedural) entre 0 e o `AttackPower` do inimigo.
 O jogador pode atacar qualquer inimigo presente no mesmo _tile_ selecionando a
 opção `F` e especificando qual o inimigo a atacar. A quantidade de HP que o
 jogador retira ao inimigo é igual a um valor [aleatório](#procedural) entre 0 e
-o `AttackPower` da arma equipada. O jogador perde uma _turn_ se tentar atacar
+o `AttackPower` da arma equipada. O jogador gasta uma _turn_ se tentar atacar
 inimigos sem uma arma equipada.
 
 Quando é realizado um ataque pelo jogador, existe uma
@@ -194,8 +196,8 @@ inimigo.
 Caso o jogador vença o inimigo (ou seja, caso o HP do inimigo diminua até
 zero), o inimigo desaparece do jogo, deixando para trás zero ou mais itens
 [aleatórios](#procedural), que o jogador pode ou não apanhar. O número de itens
-deixados para trás pelo inimigo varia com a dificuldade do nível. Ou seja, em
-níveis mais fáceis o inimigo deixa para trás mais itens.
+deixados para trás pelo inimigo varia com a dificuldade concreta do nível. Ou
+seja, em níveis mais fáceis o inimigo deixa para trás mais itens.
 
 Se o inimigo vencer o jogador (ou seja, caso o HP do jogador chegue a zero), o
 jogo termina.
@@ -267,7 +269,7 @@ sua dificuldade.
 O _score_ final do jogador é obtido através da seguinte fórmula:
 
 ```
-score = (1 + 0.4 * gameDifficulty) * (level + 0.1 * enemiesKilled)
+score = (1 + 0.4 * gameDifficulty) * (level + 0.1 * enemiesKilledInGame)
 ```
 
 Deve existir, para cada dimensão da grelha, uma tabela dos _top_ 8 _high
@@ -293,6 +295,7 @@ necessário criar uma instância da mesma:
 // Criar uma instância de Random usando como semente a hora atual do sistema
 // Para efeitos de debugging durante o desenvolvimento do jogo pode ser
 // conveniente usar uma semente fixa
+// Deve ser usada a mesma instância de Random para o jogo todo
 Random rnd = new Random();
 ```
 
@@ -405,10 +408,14 @@ O ecrã principal do jogo deve mostrar o seguinte:
 * Estatísticas do jogador: nível atual, _hit points_ (HP), arma selecionada e
   percentagem de ocupação do inventário.
 * Em cada _tile_ do mapa explorado devem ser diferenciáveis os vários elementos
-  presentes (itens, inimigos, etc), até um máximo razoável.
+  presentes (itens, inimigos, etc), até um máximo razoável. Podem
+  inclusivamente existir mais elementos no _tile_ do que aqueles que é possível
+  mostrar.
 * Uma legenda, explicando o que é cada elemento no mapa.
-* Uma ou mais mensagens descrevendo o resultado das ações realizadas na _turn_
-  anterior por parte dos jogadores e dos inimigos no _tile_ atual.
+* Uma ou mais mensagens descrevendo o resultado das ações em que o jogador se
+  viu envolvido na última _turn_ no _tile_ atual, como por exemplo ataques de
+  inimigos, ataques a inimigos, cair em armadilhas, consumo de comida, equipar
+  arma, apanhar itens, etc.
 * Indicação das opções disponíveis.
 
 Uma vez que o C# suporta nativamente a representação [Unicode], os respetivos
@@ -417,10 +424,10 @@ o efeito deve ser incluída a instrução `Console.OutputEncoding = Encoding.UTF
 no método `Main()` (é necessário usar o _namespace_ `System.Text`).
 
 A [Figura 1](#fig1) mostra uma possível implementação da visualização do jogo.
-A representação em [Unicode] do mundo de jogo impõe um limite prático no que é
-possível ver na grelha. No entanto tal não significa que o número de inimigos
-e itens num _tile_ deva ser limitado, pois todos os conteúdos totais de um
-_tile_ podem ser conferidos através da opção `(L) Look around`.
+A representação do mundo de jogo em modo de texto impõe um limite prático no
+que é possível mostrar na grelha. No entanto tal não significa que o número de
+inimigos, armadilhas e itens num _tile_ deva ser limitado, pois todos os
+conteúdos de um _tile_ podem ser conferidos com da opção `(L) Look around`.
 
 <a name="fig1"></a>
 
