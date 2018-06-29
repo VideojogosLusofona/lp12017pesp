@@ -461,7 +461,8 @@ conteúdos de um _tile_ podem ser conferidos com a opção `(L) Look around`.
 Messages
 --------
 * You moved WEST
-* You were attacked by an enemy and lost 5.3 HP
+* You were attacked by an enemy and lost 1.3 HP
+* You were attacked by an enemy and lost 17.8 HP
 
 Options
 -------
@@ -490,8 +491,8 @@ Select enemy to attack
 ----------------------
 
 0. Go back
-1. HP=19.7, AP= 3.0
-2. HP=62.1, AP=22.8
+1. Enemy (HP=19.7|AP= 3.0)
+2. Enemy (HP=62.1|AP=22.8)
 
 >
 ```
@@ -538,7 +539,7 @@ mostra um possível ecrã de _look around_.
 <a name="fig4"></a>
 
 ```
-* HERE : Enemy (HP=19.7, AP=3.0), Enemy (HP=62.1, AP=22.8), Weapon (Shiny Sword)
+* HERE : Enemy (HP=19.7|AP= 3.0), Enemy(HP=62.1|AP=22.8), Weapon (Shiny Sword)
 * ← W  : Empty
 * ↖ NW : Empty
 * ↑ N  : Empty
