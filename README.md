@@ -427,7 +427,7 @@ A [Figura 1](#fig1) mostra uma possível implementação da visualização do jo
 A representação do mundo de jogo em modo de texto impõe um limite prático no
 que é possível mostrar na grelha. No entanto tal não significa que o número de
 inimigos, armadilhas e itens num _tile_ deva ser limitado, pois todos os
-conteúdos de um _tile_ podem ser conferidos com da opção `(L) Look around`.
+conteúdos de um _tile_ podem ser conferidos com a opção `(L) Look around`.
 
 <a name="fig1"></a>
 
@@ -443,13 +443,13 @@ conteúdos de um _tile_ podem ser conferidos com da opção `(L) Look around`.
 ..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~
 ..... ..... ..... ..... ~~~~~ ~~~~~ ~~~~~ ~~~~~
 
-..... ..... ..... ?.... ..... †☿... ☿☿☿☢. ~~~~~    Legend
+..... ..... ..... ..... ..... †☿... ☿☿☿☢. ~~~~~    Legend
 ..... ..... ..... ..... ..... ..... ..... ~~~~~    ------
                                                       ⨀ - Player
 ~~~~~ ☿.... ..... ..... ✚☿... ..... ..... .....   EXIT! - Exit
 ~~~~~ ..... ..... ..... ..... ..... ..... .....       . - Empty
                                                       ~ - Unexplored
-~~~~~ ..... ☢☿✚.. ..... ..... ..... ⨀☿†.. EXIT!       ⍠ - Map
+~~~~~ ..... ☢☿✚.. ..... ..... ..... ⨀☿☿†. EXIT!       ⍠ - Map
 ~~~~~ ..... ..... ..... ..... ..... ..... EXIT!       ☿ - Enemy
                                                       ✚ - Food
 ~~~~~ ~~~~~ ~~~~~ ~~~~~ ✚☢... ..... ☢⍠... ✚....       † - Weapon
@@ -492,7 +492,6 @@ Select enemy to attack
 0. Go back
 1. HP=19.7, AP= 3.0
 2. HP=62.1, AP=22.8
-3. HP=31.9, AP= 9.3
 
 >
 ```
@@ -539,7 +538,7 @@ mostra um possível ecrã de _look around_.
 <a name="fig4"></a>
 
 ```
-* HERE : Enemy (HP=14.2, AP= 8.5), Weapon (Shiny Sword)
+* HERE : Enemy (HP=19.7, AP=3.0), Enemy (HP=62.1, AP=22.8), Weapon (Shiny Sword)
 * ← W  : Empty
 * ↖ NW : Empty
 * ↑ N  : Empty
@@ -615,12 +614,12 @@ confirmação do género `Do you really want to quit? (y/n)`.
 
 ### Organização do projeto e estrutura de classes
 
-O projeto deve estar devidamente organizado, fazendo uso de classes e
-enumerações. Cada classe/enumeração deve ser colocada num ficheiro com o mesmo
-nome. Por exemplo, uma classe chamada `Player` deve ser colocada no ficheiro
-`Player.cs`. A estrutura de classes deve ser bem pensada e organizada de uma
-forma lógica, e [cada classe deve ter uma responsabilidade específica e bem
-definida][SRP].
+O projeto deve estar devidamente organizado, fazendo uso de classes, _structs_
+e enumerações. Cada classe/_struct_/enumeração deve ser colocada num ficheiro
+com o mesmo nome. Por exemplo, uma classe chamada `Player` deve ser colocada no
+ficheiro `Player.cs`. A estrutura de classes deve ser bem pensada e organizada
+de uma forma lógica, e [cada classe deve ter uma responsabilidade específica e
+bem definida][SRP].
 
 <a name="fases"></a>
 
@@ -707,7 +706,8 @@ indicados nas fases anteriores):
 * Implementação dos _high scores_ usando ficheiros:
   * Opção _High Scores_ do menu principal permite visualizar os 8 melhores
     _scores_ para a dimensão da grelha especificada na linha de comandos.
-  * Quando jogador morre o _score_ é guardado caso esteja entre os 8 melhores.
+  * Quando jogador morre o _score_ é guardado caso esteja entre os 8 melhores
+    para a dimensão da grelha especificada na linha de comandos.
 
 A implementação completa desta fase equivale a 75% de cumprimento do
 [objetivo **O1**](#objetivos) (nota máxima 7.5).
@@ -722,8 +722,8 @@ indicados nas fases anteriores):
 * Implementação das funcionalidades `(E) Pick up item` e `(D) Drop item` para
   comida e armas. Quando este tipo de itens (comida e armas) são apanhados, são
   guardados no inventário do jogador, caso o mesmo ainda suporte o peso.
-* Atualização da opção `(H) Help` de modo a mostrar informação acerca
-  dos diferentes itens existentes no jogo.
+* Atualização da opção `(H) Help` de modo a mostrar informação acerca dos
+  diferentes tipos de comida e armas existentes no jogo.
 * Atualização da opção `(L) Look around` para descrição de comida e armas.
 
 A implementação completa desta fase equivale a 80% de cumprimento do
@@ -836,7 +836,7 @@ Este projeto tem os seguintes objetivos:
     * Um diagrama UML mostrando as relações entre as classes e tipos
       desenvolvidos no jogo. Não é necessário indicar os conteúdos das classes
       (variáveis, propriedades, métodos, etc).
-    * Um fluxograma mostrando o _game loop_.
+    * Um fluxograma mostrando o funcionamento geral do jogo.
   * Conclusões e matéria aprendida.
   * Referências:
     * Incluindo trocas de ideias com colegas, código aberto reutilizado e
